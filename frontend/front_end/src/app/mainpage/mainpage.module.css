@@ -1,0 +1,330 @@
+/* mainpage.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 1rem;
+}
+
+.headerRight h2 {
+  font-size: 18px;
+  margin: 0;
+  margin-left: 20px;
+}
+.headerRight p {
+  margin-left: 20px;
+}
+.nav {
+  margin: 1rem 0;
+  display: flex;
+  gap: 10px;
+}
+
+.navBtn {
+  background: #0093ff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.5rem;
+}
+.find {
+  font-size: 20px;
+}
+
+.searchArea {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  margin: 30px auto;
+  background: #f4f6f8;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 800px;
+}
+
+.find {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
+}
+
+.searchArea select {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+  min-width: 150px;
+}
+
+.searchArea select:focus {
+  outline: none;
+  border-color: #0070f3;
+}
+
+.inputArea {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 220px;
+  transition: border-color 0.2s ease;
+}
+
+.inputArea:focus {
+  outline: none;
+  border-color: #0070f3;
+}
+
+.searchArea button {
+  background-color: #0070f3;
+  color: white;
+  font-weight: 600;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.searchArea button:hover {
+  background-color: #0059c1;
+}
+
+.result {
+  background-color: #f1f1f1;
+  padding: 1rem;
+  flex-grow: 1; /* Cho phép phần nội dung chính đẩy footer xuống */
+}
+.studentCard {
+  margin-top: 1rem;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid #ccc;
+  display: inline-block;
+  background: white;
+}
+
+.studentCard {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  background: white;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.noResult {
+  background-color: #ffe6e6;
+  color: red;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.footer {
+  background-color: #e6f0fc;
+  padding: 30px 20px 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.footerContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  /* background-color: yellow; */
+}
+
+.column {
+  flex: 1 1 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.column p {
+  margin: 0;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.footerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* 👈 hỗ trợ responsive */
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #0070c0;
+  color: white;
+  font-size: 13px;
+}
+
+.footerBottom .left,
+.footerBottom .right {
+  margin: 4px 0;
+}
+
+/* Tuỳ chọn: căn giữa khi thu nhỏ màn hình */
+@media (max-width: 600px) {
+  .footerBottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footerBottom .left,
+  .footerBottom .right {
+    width: 100%;
+  }
+}
+
+.examInfo {
+  margin-top: 1.5rem;
+  background-color: #f1f9ff;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.examDate label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.warningArea {
+  background-color: #e6f2ff;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.noDanger {
+  background-color: #ffecec;
+  color: #d10000;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #f5c6cb;
+}
+
+.examZones {
+  margin-top: 1rem;
+}
+
+.zoneGrid {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.zoneCard {
+  background-color: #009dff;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+}
+
+.zoneDetail {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f5f9ff;
+}
+
+.sessionSelect {
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  font-size: 16px;
+}
+
+.floorBtn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.alertText {
+  margin-top: 1rem;
+  color: #c00;
+  background: #ffecec;
+  padding: 1rem;
+  border: 1px solid #ffb3b3;
+  border-radius: 6px;
+}
+.backBtn {
+  margin-bottom: 1rem;
+  background-color: #ddd;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popupCard {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+}
+
+.studentDetail p {
+  margin: 6px 0;
+}
+
+.closeBtn {
+  margin-top: 20px;
+  padding: 8px 16px;
+  background: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
