@@ -1,5 +1,5 @@
 "use client";
-
+import StudentImage from "../../../components/studentImage";
 const mockStudents = [
   {
     mssv: "23110114",
@@ -10,6 +10,11 @@ const mockStudents = [
     mssv: "23110115",
     name: "Trần Văn Vĩ",
     image: "/23110115.png", // Đặt ảnh này vào thư mục /public
+  },
+  {
+    mssv: "23110116",
+    name: "Võ Văn Vĩ",
+    image: "/23110116.png", // Đặt ảnh này vào thư mục /public
   },
   // Thêm sinh viên khác nếu cần
 ];
@@ -159,12 +164,8 @@ export default function MainPage() {
                   className={styles.studentCard}
                   onClick={() => setSelectedStudent(student)}
                 >
-                  <Image
-                    src={student.image}
-                    alt={student.name}
-                    width={180}
-                    height={220}
-                  />
+                  <StudentImage src={student.image} alt={student.name} />
+
                   <p>
                     <strong>{student.name}</strong>
                   </p>
@@ -370,7 +371,9 @@ export default function MainPage() {
             <p>
               <strong>Trường Đại Học Sư Phạm Kỹ Thuật TP. HCM</strong>
             </p>
-            <p>Phòng Thanh Tra - Pháp Chế</p>
+            <p>
+              <strong>Phòng Thanh Tra - Pháp Chế </strong>
+            </p>
             <p>📍 01 Võ Văn Ngân, Q. Thủ Đức, TP. HCM</p>
             <p>📞 (08) 37221223 (nhánh 48180)</p>
             <p>✉️ pttpc@hcmute.edu.vn</p>
@@ -390,7 +393,7 @@ export default function MainPage() {
                 rel="noopener noreferrer"
               >
                 <Image
-                  src="/facebook.png"
+                  // src="/facebook.png"
                   alt="Facebook"
                   width={24}
                   height={24}
@@ -402,7 +405,7 @@ export default function MainPage() {
                 rel="noopener noreferrer"
               >
                 <Image
-                  src="/youtube.png"
+                  // src="/youtube.png"
                   alt="YouTube"
                   width={24}
                   height={24}
