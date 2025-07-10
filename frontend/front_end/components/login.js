@@ -1,49 +1,44 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import styles from "./login.module.css"; // CSS module cho trang Login
+import { useRouter } from "next/navigation"; // ✅ Import router
+import styles from "./login.module.css";
 import Image from "next/image";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // State để lưu lỗi
-  const [time, setTime] = useState(new Date().toLocaleTimeString()); // State để lưu thời gian
+  const [error, setError] = useState("");
+  const router = useRouter(); // ✅ Khởi tạo router
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Xử lý logic đăng nhập (ví dụ gọi API ở đây)
-    console.log("Đăng nhập với", username, password);
+
+    // ✅ Giả sử tài khoản thanh tra là: thanhtra / 123456
+    if (username === "thanhtra" && password === "123456") {
+      console.log("Đăng nhập thành công");
+
+      // ✅ Điều hướng sang trang chính
+      router.push("/mainpage");
+    } else {
+      setError("Tài khoản hoặc mật khẩu không chính xác!");
+    }
   };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(new Date().toLocaleTimeString()); // Cập nhật thời gian hiện tại
-    }, 1000);
-
-    // Dọn dẹp interval khi component bị unmount
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     if (!username || !password) {
       setError("Mã sinh viên và mật khẩu không được để trống!");
     } else {
-      setError(""); // Xóa lỗi khi thông tin hợp lệ
+      setError(""); // Xoá lỗi nếu có dữ liệu
     }
-  }, [username, password]); // Chạy lại mỗi khi `username` hoặc `password` thay đổi
+  }, [username, password]);
 
   return (
     <>
       <div className={styles.container}>
         <div className={styles.loginBox}>
           <div className={styles.logoContainer}>
-            <Image
-              src="/logohcmute.png" // Đường dẫn tới logo trong thư mục public
-              alt="Logo"
-              width={100} // Kích thước tùy chỉnh cho logo
-              height={150} // Kích thước tùy chỉnh cho logo
-            />
+            <Image src="/logohcmute.png" alt="Logo" width={100} height={150} />
           </div>
           <h1 className={styles.header}>
             Trường Đại học Sư phạm Kỹ thuật TP.HCM
@@ -58,7 +53,6 @@ const Login = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Nhập tài khoản"
-                required
                 className={styles.input}
               />
             </div>
@@ -71,17 +65,14 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Nhập mật khẩu"
-                required
                 className={styles.input}
               />
             </div>
+            {error && <p className={styles.error}>{error}</p>}
             <button type="submit" className={styles.submitBtn}>
               Đăng nhập
             </button>
           </form>
-          <div className={styles.clock}>
-            <h3>{time}</h3>
-          </div>
         </div>
       </div>
       <footer className={styles.footer}>
