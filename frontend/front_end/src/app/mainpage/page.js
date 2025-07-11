@@ -57,7 +57,7 @@ const roomStudents = {
 };
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./mainpage.module.css"; // Tạo file CSS này
 
 export default function MainPage() {
@@ -82,6 +82,12 @@ export default function MainPage() {
   const [violationError, setViolationError] = useState(null);
   const [violationSummary, setViolationSummary] = useState(null);
   const [roomViolationData, setRoomViolationData] = useState(null);
+  const [violationStatistics, setViolationStatistics] = useState(null);
+  const [showStatistics, setShowStatistics] = useState(false);
+  const [showSuspendedList, setShowSuspendedList] = useState(false);
+  const [suspendedStudents, setSuspendedStudents] = useState([]);
+  const [allViolations, setAllViolations] = useState([]);
+  const [showAllViolations, setShowAllViolations] = useState(false);
 
   //search all student by id or name
   const handleSearch = async () => {
@@ -259,6 +265,57 @@ export default function MainPage() {
       setRoomViolationData(null);
     }
   };
+  // API lấy thống kê vi phạm tổng quan
+  const fetchViolationStatistics = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:8080/api/violations/statistics"
+      );
+      if (!res.ok) throw new Error("Lỗi khi lấy thống kê vi phạm");
+
+      const data = await res.json();
+      setViolationStatistics(data); // cần tạo state tương ứng
+    } catch (err) {
+      console.error("Lỗi lấy thống kê:", err.message);
+    }
+  };
+  useEffect(() => {
+    if (activeTab === "vipham") {
+      setShowStatistics(false);
+      setShowSuspendedList(false);
+      setViolations([]); // nếu muốn reset danh sách luôn
+    }
+  }, [activeTab]);
+  // API lấy danh sách sinh viên bị cấm thi (suspended/expelled)
+  const fetchSuspendedAndExpelled = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:8080/api/violations/suspended-expelled"
+      );
+      const data = await res.json();
+      setSuspendedStudents(data);
+      setShowSuspendedList(true);
+      setShowStatistics(false); // Ẩn thống kê nếu đang xem danh sách
+    } catch (err) {
+      console.error("Lỗi khi lấy danh sách cấm thi:", err);
+    }
+  };
+
+  // API lấy tất cả vi phạm (có phân trang)
+  const fetchAllViolations = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/api/violations/all");
+      const data = await res.json();
+      setAllViolations(data);
+      setShowAllViolations(true);
+
+      // Ẩn các bảng khác nếu cần
+      setShowStatistics(false);
+      setShowSuspendedList(false);
+    } catch (err) {
+      console.error("Lỗi khi lấy toàn bộ vi phạm:", err);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -288,7 +345,10 @@ export default function MainPage() {
         </button>
         <button
           className={styles.navBtn}
-          onClick={() => setActiveTab("vipham")}
+          onClick={() => {
+            setActiveTab("vipham");
+            setShowStatistics(false);
+          }}
         >
           Danh sách vi phạm
         </button>
@@ -331,7 +391,7 @@ export default function MainPage() {
                   onClick={() => fetchStudentDetail(student.studentId)}
                 >
                   <StudentImage
-                    src={student.photoUrl || "/default.png"}
+                    src={student.photoUrl || "/whiteimage.png"}
                     alt={student.fullName}
                   />
                   <p>
@@ -390,7 +450,7 @@ export default function MainPage() {
                     fetchExamShifts(selectedDate, zone);
                   }}
                 >
-                  Khu {zone}
+                  {zone}
                 </div>
               ))}
             </div>
@@ -411,7 +471,7 @@ export default function MainPage() {
           >
             ⬅ Quay lại danh sách khu
           </button>
-          <h3>Khu {selectedZone}</h3>
+          <h3> {selectedZone}</h3>
 
           {examShifts.length > 0 && (
             <select
@@ -431,20 +491,6 @@ export default function MainPage() {
               ))}
             </select>
           )}
-
-          {/* {!selectedFloor && (
-            <div className={styles.floorSelect}>
-              {["Tầng 1", "Tầng 2", "Tầng 3"].map((floor) => (
-                <button
-                  key={floor}
-                  className={styles.floorBtn}
-                  onClick={() => setSelectedFloor(floor)}
-                >
-                  🧭 {floor}
-                </button>
-              ))}
-            </div>
-          )} */}
 
           {selectedShift ? (
             examRooms.length > 0 ? (
@@ -552,7 +598,7 @@ export default function MainPage() {
                 onClick={() => fetchStudentDetail(student.studentId)}
               >
                 <Image
-                  src={student.photoUrl || "/default.png"}
+                  src={student.photoUrl || "/whiteimage.png"}
                   alt={student.fullName}
                   width={180}
                   height={220}
@@ -572,7 +618,7 @@ export default function MainPage() {
           <div className={styles.popupCard}>
             <h3>Thông tin sinh viên</h3>
             <Image
-              src={selectedStudent.photoUrl || "/default.png"}
+              src={selectedStudent.photoUrl || "/whiteimage.png"}
               alt="avatar"
               width={120}
               height={140}
@@ -630,10 +676,213 @@ export default function MainPage() {
               onChange={(e) => setViolationStudentId(e.target.value)}
               className={styles.inputArea}
             />
-            <button onClick={() => fetchViolations(violationStudentId)}>
+            <button
+              onClick={() => {
+                setShowStatistics(false);
+                setShowSuspendedList(false);
+                setShowAllViolations(false);
+                fetchViolations(violationStudentId);
+              }}
+            >
               Tìm kiếm
             </button>
+            <button
+              onClick={() => {
+                fetchViolationStatistics(); // gọi API
+                setShowStatistics(true); // bật hiển thị bảng
+              }}
+            >
+              Xem thống kê
+            </button>
+            <button
+              onClick={() => {
+                fetchSuspendedAndExpelled();
+                setShowStatistics(false);
+              }}
+            >
+              Danh sách sinh viên bị cấm thi
+            </button>
+            <button onClick={fetchAllViolations}>Tất cả vi phạm</button>
           </div>
+
+          {showStatistics && violationStatistics && (
+            <div className={styles.violationStats}>
+              {" "}
+              <h4>📊 Thống kê vi phạm tổng quan</h4>{" "}
+              {/* Bảng 1: Mức độ vi phạm */} <h5>Mức độ vi phạm</h5>{" "}
+              <table className={styles.statsTable}>
+                {" "}
+                <thead>
+                  {" "}
+                  <tr>
+                    {" "}
+                    <th>Mức độ</th> <th>Số lượng</th>{" "}
+                  </tr>{" "}
+                </thead>{" "}
+                <tbody>
+                  {" "}
+                  {Object.entries(violationStatistics.violationsByLevel).map(
+                    ([level, count]) => (
+                      <tr key={level}>
+                        {" "}
+                        <td>{level}</td> <td>{count}</td>{" "}
+                      </tr>
+                    )
+                  )}{" "}
+                  <tr>
+                    {" "}
+                    <td>
+                      {" "}
+                      <strong>Tổng cộng</strong>{" "}
+                    </td>{" "}
+                    <td>
+                      {" "}
+                      <strong>
+                        {violationStatistics.totalViolations}
+                      </strong>{" "}
+                    </td>{" "}
+                  </tr>{" "}
+                </tbody>{" "}
+              </table>{" "}
+              {/* Bảng 2: Khu vực vi phạm */} <h5>Khu vực xảy ra vi phạm</h5>{" "}
+              <table className={styles.statsTable}>
+                {" "}
+                <thead>
+                  {" "}
+                  <tr>
+                    {" "}
+                    <th>Khu vực</th> <th>Số lượng</th>{" "}
+                  </tr>{" "}
+                </thead>{" "}
+                <tbody>
+                  {" "}
+                  {Object.entries(violationStatistics.violationsByArea).map(
+                    ([area, count]) => (
+                      <tr key={area}>
+                        {" "}
+                        <td>{area}</td> <td>{count}</td>{" "}
+                      </tr>
+                    )
+                  )}{" "}
+                </tbody>{" "}
+              </table>{" "}
+              {/* Bảng 3: Phòng vi phạm */} <h5>Phòng xảy ra vi phạm</h5>{" "}
+              <table className={styles.statsTable}>
+                {" "}
+                <thead>
+                  {" "}
+                  <tr>
+                    {" "}
+                    <th>Phòng</th> <th>Số lượng</th>{" "}
+                  </tr>{" "}
+                </thead>{" "}
+                <tbody>
+                  {" "}
+                  {Object.entries(violationStatistics.violationsByRoom).map(
+                    ([room, count]) => (
+                      <tr key={room}>
+                        {" "}
+                        <td>{room}</td> <td>{count}</td>{" "}
+                      </tr>
+                    )
+                  )}{" "}
+                </tbody>{" "}
+              </table>{" "}
+              {/* Bảng 4: Trạng thái sinh viên */}{" "}
+              <h5>Trạng thái hiện tại của sinh viên</h5>{" "}
+              <table className={styles.statsTable}>
+                {" "}
+                <thead>
+                  {" "}
+                  <tr>
+                    {" "}
+                    <th>Trạng thái</th> <th>Số lượng</th>{" "}
+                  </tr>{" "}
+                </thead>{" "}
+                <tbody>
+                  {" "}
+                  {Object.entries(violationStatistics.studentsByStatus).map(
+                    ([status, count]) => (
+                      <tr key={status}>
+                        {" "}
+                        <td>{status}</td> <td>{count}</td>{" "}
+                      </tr>
+                    )
+                  )}{" "}
+                </tbody>{" "}
+              </table>{" "}
+            </div>
+          )}
+
+          {showSuspendedList && suspendedStudents.length > 0 && (
+            <div className={styles.violationStats}>
+              <h4>🚫 Danh sách sinh viên bị cấm thi</h4>
+              <table className={styles.statsTable}>
+                <thead>
+                  <tr>
+                    <th>MSSV</th>
+                    <th>Họ tên</th>
+                    <th>Lớp</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày vi phạm gần nhất</th>
+                    <th>Mức độ</th>
+                    <th>Lý do</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {suspendedStudents.map((s) => (
+                    <tr key={s.studentId}>
+                      <td>{s.studentId}</td>
+                      <td>{s.studentName}</td>
+                      <td>{s.studentClass}</td>
+                      <td>{s.currentExamStatus}</td>
+                      <td>{s.latestViolationDate}</td>
+                      <td>{s.latestViolationLevel}</td>
+                      <td>{s.statusReason}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {showAllViolations && allViolations.length > 0 && (
+            <div className={styles.violationStats}>
+              <h4>📋 Tất cả vi phạm</h4>
+              <table className={styles.statsTable}>
+                <thead>
+                  <tr>
+                    <th>MSSV</th>
+                    <th>Họ tên</th>
+                    <th>Lớp</th>
+                    <th>Ngày thi</th>
+                    <th>Khu vực</th>
+                    <th>Phòng</th>
+                    <th>Ca</th>
+                    <th>Mức độ</th>
+                    <th>Ghi chú</th>
+                    <th>Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allViolations.map((v, idx) => (
+                    <tr key={idx}>
+                      <td>{v.studentId}</td>
+                      <td>{v.studentName}</td>
+                      <td>{v.studentClass}</td>
+                      <td>{v.examDate}</td>
+                      <td>{v.area}</td>
+                      <td>{v.room}</td>
+                      <td>{v.shift}</td>
+                      <td>{v.violationLevel}</td>
+                      <td>{v.description}</td>
+                      <td>{v.currentExamStatus}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {violationLoading && <p>Đang tải dữ liệu...</p>}
           {violationError && <p style={{ color: "red" }}>{violationError}</p>}
@@ -685,60 +934,51 @@ export default function MainPage() {
           {/* Cột 1: Logo + Liên hệ */}
           <div className={styles.column}>
             <Image src="/logohcmute.png" alt="Logo" width={60} height={70} />
-            <p>
-              <strong>Trường Đại Học Sư Phạm Kỹ Thuật TP. HCM</strong>
-            </p>
-            <p>
-              <strong>Phòng Thanh Tra - Pháp Chế </strong>
-            </p>
+            <h4>TRƯỜNG ĐH SPKT TP. HCM</h4>
+            <p>Phòng Thanh Tra - Pháp Chế</p>
             <p>📍 01 Võ Văn Ngân, Q. Thủ Đức, TP. HCM</p>
-            <p>📞 (08) 37221223 (nhánh 48180)</p>
+            <p>📞 (08) 3722 1223 (nhánh 48180)</p>
             <p>✉️ pttpc@hcmute.edu.vn</p>
           </div>
 
           {/* Cột 2: Kết nối */}
           <div className={styles.column}>
+            <h4>Kết nối</h4>
             <p>
-              <strong>Kết nối với HCMUTE</strong>
+              <a
+                href="https://www.hcmute.edu.vn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                🌐 Trang chủ HCMUTE
+              </a>
             </p>
-            <p>➡️ ĐH Sư Phạm Kỹ Thuật TP. Hồ Chí Minh</p>
-            <p>➡️ Phòng Thanh Tra Pháp Chế</p>
-            <div className={styles.socialIcons}>
+            <p>
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image
-                  // src="/facebook.png"
-                  alt="Facebook"
-                  width={24}
-                  height={24}
-                />
+                📘 Facebook Phòng TT-PC
               </a>
+            </p>
+            <p>
               <a
                 href="https://youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image
-                  // src="/youtube.png"
-                  alt="YouTube"
-                  width={24}
-                  height={24}
-                />
+                ▶️ YouTube HCMUTE
               </a>
-            </div>
+            </p>
           </div>
         </div>
 
         {/* Thanh cuối */}
         <div className={styles.footerBottom}>
-          <p className={styles.left}>
-            Copyright © 2017 HCMUTE. All rights reserved.
-          </p>
+          <p className={styles.left}>© 2017 HCMUTE. All rights reserved.</p>
           <p className={styles.right}>
-            HOTLINE - PHÒNG THANH TRA PHÁP CHẾ: (+84.28) 3722 1223 (nhánh 48180)
+            HOTLINE: (+84.28) 3722 1223 (nhánh 48180)
           </p>
         </div>
       </footer>
