@@ -1,0 +1,605 @@
+/* mainpage.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 1rem;
+}
+
+.headerRight h2 {
+  font-size: 18px;
+  margin: 0;
+  margin-left: 20px;
+}
+.headerRight p {
+  margin-left: 20px;
+}
+.nav {
+  margin: 1rem 0;
+  display: flex;
+  gap: 10px;
+}
+
+.navBtn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
+}
+
+.navBtn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.5rem;
+}
+.find {
+  font-size: 20px;
+}
+
+.searchArea {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ✅ căn giữa theo chiều ngang */
+  gap: 12px;
+  flex-wrap: wrap; /* ✅ cho phép xuống dòng nếu hẹp */
+  background: #f4f6f8;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+  margin: 0 auto; /* ✅ căn giữa khối theo container */
+}
+
+.find {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
+}
+
+.searchArea select {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+  min-width: 150px;
+}
+
+.searchArea select:focus {
+  outline: none;
+  border-color: #0070f3;
+}
+
+.inputArea {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 220px;
+  transition: border-color 0.2s ease;
+}
+
+.inputArea:focus {
+  outline: none;
+  border-color: #0070f3;
+}
+
+.searchArea button {
+  padding: 10px 16px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.searchArea button:hover {
+  background-color: #0059c1;
+}
+
+.result {
+  background-color: #f1f1f1;
+  padding: 1rem;
+  flex-grow: 1; /* Cho phép phần nội dung chính đẩy footer xuống */
+}
+.studentCard {
+  margin-top: 1rem;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid #ccc;
+  display: inline-block;
+  background: white;
+}
+
+.studentCard {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  background: white;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.noResult {
+  background-color: #ffe6e6;
+  color: red;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.dateInput {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 220px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.footer {
+  position: relative;
+  left: 0;
+  background-color: #f3f3f3;
+  padding: 2rem 1rem;
+  border-top: 1px solid #ccc;
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.column {
+  flex: 1;
+  min-width: 220px;
+}
+
+.column h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.column a {
+  color: #004a9f;
+  text-decoration: none;
+}
+
+.footerBottom {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.footerBottom p {
+  margin: 0;
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.column {
+  flex: 1;
+  min-width: 220px;
+}
+.column h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+.column a {
+  color: #004a9f;
+  text-decoration: none;
+}
+.column p {
+  margin: 0;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.footerBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* 👈 hỗ trợ responsive */
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #0070c0;
+  color: white;
+  font-size: 13px;
+}
+
+.footerBottom .left,
+.footerBottom .right {
+  margin: 4px 0;
+}
+
+/* Tuỳ chọn: căn giữa khi thu nhỏ màn hình */
+@media (max-width: 600px) {
+  .footerBottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footerBottom .left,
+  .footerBottom .right {
+    width: 100%;
+  }
+}
+
+.examInfo {
+  margin-top: 1.5rem;
+  background-color: #f9f9fc;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.examDate {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.examDate label {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.examDate select {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  min-width: 180px;
+  transition: border-color 0.2s ease;
+}
+.examDate select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+.warningArea {
+  background-color: #fff5f5;
+  border: 1px solid #f5c6cb;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+.warningArea h4 {
+  color: #d10000;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.noDanger {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+.examZones h4 {
+  font-size: 18px;
+  margin-bottom: 1rem;
+  color: #0070c0;
+}
+.examZones {
+  margin-top: 1rem;
+}
+
+.zoneGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.zoneCard {
+  background-color: #007bff;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, background-color 0.2s;
+}
+.zoneCard:hover {
+  background-color: #005ecb;
+  transform: scale(1.05);
+}
+.zoneDetail {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f5f9ff;
+}
+
+.zoneDetail h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+.sessionSelect {
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  background-color: white;
+  color: #007bff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
+  transition: all 0.3s ease;
+  appearance: none; /* ẩn mũi tên mặc định nếu muốn tùy chỉnh */
+}
+
+.sessionSelect:hover {
+  background-color: #149cdc;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.roomCard {
+  background-color: white;
+  border: 2px solid #007bff;
+  color: #007bff;
+  padding: 12px 16px;
+  margin: 8px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
+}
+
+.roomCard:hover {
+  background-color: #007bff;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.roomGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.floorBtn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.alertText {
+  margin-top: 1rem;
+  color: #c00;
+  background: #ffecec;
+  padding: 1rem;
+  border: 1px solid #ffb3b3;
+  border-radius: 6px;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f0f0f0;
+  color: #007bff;
+  border: 2px solid #007bff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.backBtn:hover {
+  background-color: #007bff;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popupCard {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+}
+
+.studentDetail p {
+  margin: 6px 0;
+}
+
+.closeBtn {
+  margin-top: 20px;
+  padding: 8px 16px;
+  background: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.violationSection {
+  padding: 1rem;
+  text-align: center;
+}
+
+.violationTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.violationTable th,
+.violationTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.violationTable th {
+  background-color: #f2f2f2;
+}
+
+.violationInRoom {
+  margin-top: 1.5rem;
+  background: #fff9f9;
+  padding: 1rem;
+  border: 1px solid #f0c0c0;
+  border-radius: 6px;
+}
+
+.violationTable {
+  width: 100%;
+  margin-top: 0.5rem;
+  border-collapse: collapse;
+}
+
+.violationTable th,
+.violationTable td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.violationTable th {
+  background-color: #ffecec;
+}
+
+.violationStats {
+  margin-top: 2rem;
+  background-color: #f9f9fc;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.violationStats h4 {
+  margin-bottom: 1.5rem;
+  font-size: 20px;
+  color: #0070c0;
+}
+
+.violationStats h5 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 17px;
+  color: #444;
+}
+
+.statsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.statsTable th,
+.statsTable td {
+  border: 1px solid #ddd;
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.statsTable th {
+  background-color: #eef3fb;
+  color: #333;
+}
+
+.statsTable tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.statsTable tr:hover {
+  background-color: #e6f0ff;
+  transition: background-color 0.2s ease;
+}
+
+.statsTable strong {
+  font-weight: bold;
+  color: #222;
+}
+
+/* Optional: animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
