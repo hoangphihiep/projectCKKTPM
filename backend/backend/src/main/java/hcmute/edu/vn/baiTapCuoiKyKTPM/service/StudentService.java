@@ -105,7 +105,7 @@ public class StudentService {
                 student.getCurrentInfo().getMajor(),
                 student.getCurrentInfo().getFaculty(),
                 student.getStatus() != null ? student.getStatus().getExamEligibility() : "active",
-                generatePhotoUrl(student.getStudentId()) // Tạo URL ảnh
+                student.getCurrentInfo().getPhotoUrl() // Tạo URL ảnh
         );
     }
 
@@ -118,16 +118,9 @@ public class StudentService {
                 student.getInfoHistory(),
                 student.getExamParticipations(),
                 student.getStatus(),
-                generatePhotoUrl(student.getStudentId()),
+                student.getCurrentInfo().getPhotoUrl(),
                 student.getCreatedAt(),
                 student.getUpdatedAt()
         );
-    }
-
-    // Tạo URL ảnh sinh viên (có thể customize theo hệ thống của bạn)
-    private String generatePhotoUrl(String studentId) {
-        // Ví dụ: return "/api/students/photos/" + studentId + ".jpg";
-        // Hoặc có thể lưu trong database và lấy ra
-        return "/placeholder.svg?height=150&width=150&text=" + studentId;
     }
 }

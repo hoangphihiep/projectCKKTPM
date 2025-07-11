@@ -11,27 +11,72 @@ const Login = () => {
   const [error, setError] = useState("");
   const router = useRouter(); // ✅ Khởi tạo router
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault()
 
-    // ✅ Giả sử tài khoản thanh tra là: thanhtra / 123456
-    if (username === "thanhtra" && password === "123456") {
-      console.log("Đăng nhập thành công");
-
-      // ✅ Điều hướng sang trang chính
-      router.push("/mainpage");
-    } else {
-      setError("Tài khoản hoặc mật khẩu không chính xác!");
+    if (!username.trim() || !password.trim()) {
+      setError("Tài khoản và mật khẩu không được để trống!")
+      return
     }
-  };
+    setError("")
 
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Important for session cookies
+        body: JSON.stringify({
+          username: username.trim(),
+          password: password.trim(),
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        console.log("Đăng nhập thành công:", data)
+
+        // Store user info in localStorage if needed
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            username: data.username,
+            authorities: data.authorities,
+          }),
+        )
+
+        // Redirect to main page
+        router.push("/mainpage")
+      } else {
+        setError(data.message || "Đăng nhập thất bại")
+      }
+    } catch (error) {
+      console.error("Lỗi khi đăng nhập:", error)
+      setError("Không thể kết nối đến server. Vui lòng thử lại sau.")
+    }
+  }
+
+  // Check if user is already authenticated
   useEffect(() => {
-    if (!username || !password) {
-      setError("Mã sinh viên và mật khẩu không được để trống!");
-    } else {
-      setError(""); // Xoá lỗi nếu có dữ liệu
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/auth/check", {
+          credentials: "include",
+        })
+        const data = await response.json()
+
+        if (data.authenticated) {
+          router.push("/mainpage")
+        }
+      } catch (error) {
+        console.log("Not authenticated or server error")
+      }
     }
-  }, [username, password]);
+
+    checkAuth()
+  }, [router])
 
   return (
     <>

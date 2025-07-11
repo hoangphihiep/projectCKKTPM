@@ -26,4 +26,5 @@ public class StudentInfo {
     private String phone;
     private String major;
     private String faculty;
+    private String photoUrl;
 }
