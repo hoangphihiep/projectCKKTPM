@@ -38,7 +38,7 @@ const Login = () => {
       <div className={styles.container}>
         <div className={styles.loginBox}>
           <div className={styles.logoContainer}>
-            <Image src="/logohcmute.png" alt="Logo" width={100} height={150} />
+            <Image src="/logohcmute.png" alt="Logo" width={120} height={150} />
           </div>
           <h1 className={styles.header}>
             Trường Đại học Sư phạm Kỹ thuật TP.HCM

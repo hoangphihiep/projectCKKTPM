@@ -350,21 +350,21 @@ export default function MainPage() {
             setShowStatistics(false);
           }}
         >
-          Danh sách vi phạm
+          Tra cứu vi phạm
         </button>
       </nav>
 
       {activeTab === "sinhvien" && (
         <div className={styles.searchArea}>
-          <label className={styles.find}>Tìm theo:</label>
-          <select
+          <label className={styles.find}>Tìm kiếm sinh viên:</label>
+          {/* <select
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
             className={styles.searchArea}
           >
             <option>Họ tên</option>
             <option>Mã số sinh viên</option>
-          </select>
+          </select> */}
           <input
             type="text"
             placeholder="Nhập từ khóa tìm kiếm"
@@ -414,19 +414,16 @@ export default function MainPage() {
           {/* Chọn ngày thi */}
           <div className={styles.examDate}>
             <label htmlFor="examDate">Chọn ngày thi:</label>
-            <select
+            <input
+              type="date"
               id="examDate"
               value={selectedDate}
               onChange={(e) => {
                 setSelectedDate(e.target.value);
                 fetchExamAreas(e.target.value);
               }}
-            >
-              <option value="">-- Chọn ngày --</option>
-              <option value="2025-06-25">2025-06-25</option>
-              <option value="2025-06-26">2025-06-26</option>
-              <option value="2025-07-01">2025-07-01</option>
-            </select>
+              className={styles.dateInput}
+            />
           </div>
 
           {/* Cảnh báo thí sinh thi nhiều ca */}
@@ -547,9 +544,9 @@ export default function MainPage() {
           </button>
           <h3>
             Môn thi: Anh văn đầu ra, Ngày thi: {selectedDate}, Phòng:{" "}
-            {selectedRoom}
+            {selectedRoom}, Số lượng thí sinh:{roomStudentList.length}
           </h3>
-          {roomViolationData && (
+          {/* {roomViolationData && (
             <div className={styles.violationInRoom}>
               <h4>📋 Thống kê vi phạm trong phòng</h4>
               <p>
@@ -588,7 +585,7 @@ export default function MainPage() {
                 </table>
               )}
             </div>
-          )}
+          )} */}
 
           <div className={styles.resultGrid}>
             {roomStudentList.map((student) => (
@@ -671,7 +668,7 @@ export default function MainPage() {
           <div className={styles.searchArea}>
             <input
               type="text"
-              placeholder="Nhập MSSV (studentId)..."
+              placeholder="Nhập MSSV"
               value={violationStudentId}
               onChange={(e) => setViolationStudentId(e.target.value)}
               className={styles.inputArea}
@@ -690,6 +687,9 @@ export default function MainPage() {
               onClick={() => {
                 fetchViolationStatistics(); // gọi API
                 setShowStatistics(true); // bật hiển thị bảng
+                setShowSuspendedList(false);
+                setShowAllViolations(false);
+                setViolations([]);
               }}
             >
               Xem thống kê
@@ -698,11 +698,24 @@ export default function MainPage() {
               onClick={() => {
                 fetchSuspendedAndExpelled();
                 setShowStatistics(false);
+                setShowSuspendedList(true);
+                setShowAllViolations(false);
+                setViolations([]);
               }}
             >
               Danh sách sinh viên bị cấm thi
             </button>
-            <button onClick={fetchAllViolations}>Tất cả vi phạm</button>
+            <button
+              onClick={() => {
+                fetchAllViolations();
+                setShowStatistics(false);
+                setShowSuspendedList(false);
+                setShowAllViolations(true);
+                setViolations([]); // 👉 ẩn bảng kết quả tìm kiếm
+              }}
+            >
+              Tất cả vi phạm
+            </button>
           </div>
 
           {showStatistics && violationStatistics && (
@@ -922,9 +935,14 @@ export default function MainPage() {
                 </tbody>
               </table>
             </div>
-          ) : (
-            !violationLoading && <p>Không có vi phạm nào được tìm thấy</p>
-          )}
+          ) : !violationLoading &&
+            violations.length === 0 &&
+            !showStatistics &&
+            !showSuspendedList &&
+            !showAllViolations &&
+            violationStudentId ? (
+            <p>Không có vi phạm nào được tìm thấy</p>
+          ) : null}
         </div>
       )}
 

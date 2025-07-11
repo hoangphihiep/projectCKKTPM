@@ -57,16 +57,16 @@
 
 .searchArea {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding: auto;
-  margin: auto;
+  justify-content: center; /* ✅ căn giữa theo chiều ngang */
+  gap: 12px;
+  flex-wrap: wrap; /* ✅ cho phép xuống dòng nếu hẹp */
   background: #f4f6f8;
   border-radius: 12px;
+  padding: 12px 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  max-width: 800px;
+  max-width: 100%;
+  margin: 0 auto; /* ✅ căn giữa khối theo container */
 }
 
 .find {
@@ -106,14 +106,14 @@
 }
 
 .searchArea button {
+  padding: 10px 16px;
   background-color: #0070f3;
   color: white;
-  font-weight: 600;
-  padding: 10px 18px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
 
 .searchArea button:hover {
@@ -148,6 +148,23 @@
   color: red;
   padding: 0.5rem;
   margin-top: 0.5rem;
+}
+
+.dateInput {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 220px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
 .footer {
@@ -476,6 +493,7 @@
 
 .violationSection {
   padding: 1rem;
+  text-align: center;
 }
 
 .violationTable table {
