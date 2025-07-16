@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,12 @@ public class ViolationReportService {
         }
 
         Student student = studentOpt.get();
-        return student.getExamParticipations().stream()
+        List<ExamParticipation> examParticipations = student.getExamParticipations();
+        if (examParticipations == null) {
+            return new ArrayList<>();
+        }
+
+        return examParticipations.stream()
                 .filter(exam -> exam.getViolation() != null && exam.getViolation().isHasViolation())
                 .map(exam -> convertToViolationResponse(student, exam))
                 .collect(Collectors.toList());
@@ -40,7 +46,12 @@ public class ViolationReportService {
         }
 
         Student student = studentOpt.get();
-        List<ExamParticipation> violations = student.getExamParticipations().stream()
+        List<ExamParticipation> examParticipations = student.getExamParticipations();
+        if (examParticipations == null) {
+            examParticipations = new ArrayList<>();
+        }
+
+        List<ExamParticipation> violations = examParticipations.stream()
                 .filter(exam -> exam.getViolation() != null && exam.getViolation().isHasViolation())
                 .collect(Collectors.toList());
 
@@ -82,13 +93,20 @@ public class ViolationReportService {
         List<Student> students = studentRepository.findByExamDateAndAreaAndShiftAndRoom(examDateStr, area, shift, room);
 
         List<ViolationReportResponse> violations = students.stream()
-                .flatMap(student -> student.getExamParticipations().stream()
-                        .filter(exam -> exam.getExamDate().equals(examDateStr) &&
-                                exam.getArea().equals(area) &&
-                                exam.getShift().equals(shift) &&
-                                exam.getRoom().equals(room))
-                        .filter(exam -> exam.getViolation() != null && exam.getViolation().isHasViolation())
-                        .map(exam -> convertToViolationResponse(student, exam)))
+                .filter(Objects::nonNull)
+                .flatMap(student -> {
+                    List<ExamParticipation> examParticipations = student.getExamParticipations();
+                    if (examParticipations == null) {
+                        return Stream.empty();
+                    }
+                    return examParticipations.stream()
+                            .filter(exam -> exam.getExamDate().equals(examDateStr) &&
+                                    exam.getArea().equals(area) &&
+                                    exam.getShift().equals(shift) &&
+                                    exam.getRoom().equals(room))
+                            .filter(exam -> exam.getViolation() != null && exam.getViolation().isHasViolation())
+                            .map(exam -> convertToViolationResponse(student, exam));
+                })
                 .collect(Collectors.toList());
 
         ExamRoomViolationResponse response = new ExamRoomViolationResponse();
@@ -108,18 +126,27 @@ public class ViolationReportService {
         List<Student> allStudents = studentRepository.findAll();
 
         return allStudents.stream()
-                .flatMap(student -> student.getExamParticipations().stream()
-                        .filter(exam -> {
-                            try {
-                                LocalDate examDate = LocalDate.parse(exam.getExamDate());
-                                return examDate.isAfter(startDate.minusDays(1)) &&
-                                        examDate.isBefore(endDate.plusDays(1));
-                            } catch (DateTimeParseException e) {
-                                return false;
-                            }
-                        })
-                        .filter(exam -> exam.getViolation() != null && exam.getViolation().isHasViolation())
-                        .map(exam -> convertToViolationResponse(student, exam)))
+                .filter(Objects::nonNull) // Lọc null students
+                .flatMap(student -> {
+                    // Null check cho examParticipations
+                    List<ExamParticipation> examParticipations = student.getExamParticipations();
+                    if (examParticipations == null) {
+                        return Stream.empty(); // Trả về empty stream thay vì null
+                    }
+
+                    return examParticipations.stream()
+                            .filter(exam -> {
+                                try {
+                                    LocalDate examDate = LocalDate.parse(exam.getExamDate());
+                                    return examDate.isAfter(startDate.minusDays(1)) &&
+                                            examDate.isBefore(endDate.plusDays(1));
+                                } catch (DateTimeParseException e) {
+                                    return false;
+                                }
+                            })
+                            .filter(exam -> exam.getViolation() != null && exam.getViolation().isHasViolation())
+                            .map(exam -> convertToViolationResponse(student, exam));
+                })
                 .sorted(Comparator.comparing(response -> {
                     try {
                         return response.getExamDate();
@@ -135,9 +162,20 @@ public class ViolationReportService {
         List<Student> allStudents = studentRepository.findAll();
 
         List<ViolationReportResponse> allViolations = allStudents.stream()
-                .flatMap(student -> student.getExamParticipations().stream()
-                        .filter(exam -> exam.getViolation() != null && exam.getViolation().isHasViolation())
-                        .map(exam -> convertToViolationResponse(student, exam)))
+                .filter(Objects::nonNull) // Lọc null students
+                .flatMap(student -> {
+                    // Null check cho examParticipations
+                    List<ExamParticipation> examParticipations = student.getExamParticipations();
+                    if (examParticipations == null) {
+                        return Stream.empty(); // Trả về empty stream thay vì null
+                    }
+
+                    return examParticipations.stream()
+                            .filter(exam -> exam != null &&
+                                    exam.getViolation() != null &&
+                                    exam.getViolation().isHasViolation())
+                            .map(exam -> convertToViolationResponse(student, exam));
+                })
                 .collect(Collectors.toList());
 
         ViolationStatisticsResponse stats = new ViolationStatisticsResponse();
@@ -145,6 +183,7 @@ public class ViolationReportService {
 
         // Thống kê theo mức độ vi phạm
         Map<String, Integer> violationsByLevel = allViolations.stream()
+                .filter(violation -> violation.getViolationLevel() != null) // Null check
                 .collect(Collectors.groupingBy(
                         ViolationReportResponse::getViolationLevel,
                         Collectors.collectingAndThen(Collectors.counting(), Math::toIntExact)
@@ -153,6 +192,7 @@ public class ViolationReportService {
 
         // Thống kê theo khu vực
         Map<String, Integer> violationsByArea = allViolations.stream()
+                .filter(violation -> violation.getArea() != null) // Null check
                 .collect(Collectors.groupingBy(
                         ViolationReportResponse::getArea,
                         Collectors.collectingAndThen(Collectors.counting(), Math::toIntExact)
@@ -161,16 +201,23 @@ public class ViolationReportService {
 
         // Thống kê theo phòng thi
         Map<String, Integer> violationsByRoom = allViolations.stream()
+                .filter(violation -> violation.getRoom() != null) // Null check
                 .collect(Collectors.groupingBy(
                         ViolationReportResponse::getRoom,
                         Collectors.collectingAndThen(Collectors.counting(), Math::toIntExact)
                 ));
         stats.setViolationsByRoom(violationsByRoom);
 
-        // Thống kê trạng thái sinh viên
+        // Thống kê trạng thái sinh viên với null check tốt hơn
         Map<String, Integer> studentsByStatus = allStudents.stream()
+                .filter(Objects::nonNull) // Lọc null students
                 .collect(Collectors.groupingBy(
-                        student -> student.getStatus() != null ? student.getStatus().getExamEligibility() : "active",
+                        student -> {
+                            if (student.getStatus() != null && student.getStatus().getExamEligibility() != null) {
+                                return student.getStatus().getExamEligibility();
+                            }
+                            return "active"; // Default value
+                        },
                         Collectors.collectingAndThen(Collectors.counting(), Math::toIntExact)
                 ));
         stats.setStudentsByStatus(studentsByStatus);

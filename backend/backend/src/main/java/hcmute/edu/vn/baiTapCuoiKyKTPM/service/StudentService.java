@@ -22,6 +22,11 @@ public class StudentService {
     // Tìm kiếm sinh viên theo mã sinh viên hoặc họ tên
     public List<StudentSearchResponse> searchStudents(String searchTerm) {
         List<Student> students = studentRepository.findByStudentIdOrFullNameContaining(searchTerm);
+        for (Student s : students){
+            System.out.println ("Giá trị: " + s.getStudentId() + " " + s.getCurrentInfo().getFullName());
+        }
+        System.out.println ("Search Item: " + searchTerm);
+        System.out.println ("Có vào đây: " + students.size());
         return students.stream()
                 .map(this::convertToSearchResponse)
                 .collect(Collectors.toList());
